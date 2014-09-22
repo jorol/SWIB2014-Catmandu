@@ -16,7 +16,21 @@ We will be using a simplified DSL language. Participants should be familiar with
 
 ## Requirements
 
-Laptop with VirtualBox installed. Organisers will provide a virtualbox image (Linux guest system) beforehand. You can also install your own environment, see "[Installation](https://github.com/LibreCat/Catmandu/wiki/Installation)". Participants should bring their own data (CSV, JSON, MAB2, MARC, PICA+, RDF or YAML).
+Laptop with VirtualBox installed. Organisers will provide a VirtualBox image (Linux guest system) beforehand. You can also install your own environment, see "[Installation](https://github.com/LibreCat/Catmandu/wiki/Installation)". Participants should bring their own data (CSV, JSON, MAB2, MARC, PICA+, RDF or YAML).
+
+## VM
+
+The VirtualBox image is available [here](http://jorol.de/catmandu/catmandu.ova). Ask the organisers for login details.
+
+The best way to login to a guest Linux VirtualBox VM via SSH is port forwarding. By default, you should have one network interface already which is using NAT. Then go to the "Network" settings and click the "Port Forwarding" button. Add a new Rule:
+
+    Host port 3022, guest port 22, name ssh, other left blank.
+
+You can now login from host system to guest system via SSH:
+
+    # User name: catmandu
+    # Password: catmandu
+    ssh -p 3022 catmandu@127.0.0.1
 
 ## Agenda
 

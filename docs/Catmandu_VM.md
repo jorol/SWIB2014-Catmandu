@@ -1,9 +1,11 @@
-# Erstellen einer VM für Catmandu
+# Catmandu VM
 
 ## Installation
 
 OS: Debian 7.6.0 i386
+
 User: catmandu
+
 PWD: catmandu
 
 ```terminal
@@ -36,14 +38,3 @@ cpanm Mango
 
 shutdown -h now
 ```
-
-
-## SSH from GUEST to HOST
-
-The best way to login to a guest Linux VirtualBox VM is port forwarding. By default, you should have one interface already which is using NAT. Then go to the Network settings and click the Port Forwarding button. Add a new Rule:
-
-    Host port 3022, guest port 22, name ssh, other left blank.
-
-    ssh 
-    scp -P 3022 -r ./shared catmandu@127.0.0.1:/home/catmandu
-
