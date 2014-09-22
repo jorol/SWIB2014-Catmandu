@@ -1,0 +1,92 @@
+catmandu convert MAB --fix './fix/zdb_bibliographic.fix' to YAML < ./data/journals.mab2
+catmandu convert MAB --fix "mab_map('001', 'id'); delete('record');" to YAML < ./data/journals.mab2
+catmandu convert MAB --fix "mab_map('001', 'id'); remove_field('record');" to YAML < ./data/journals.mab2
+catmandu convert MAB --fix "mab_map('001', 'id');" to YAML < ./data/journals.mab2
+catmandu convert MAB --fix "mab_map('001', 'title'); remove_field('record');" to CSV < ./data/journals.mab2
+catmandu convert MAB --fix "mab_map('245', 'title'); remove_field('record');" to CSV < ./data/journals.mab2
+catmandu convert MAB --fix "mab_map('331', 'title'); remove_field('record');" to CSV < ./data/journals.mab2
+catmandu convert MAB --fix "mab_map('331', 'title'); remove_field('record');" to JSON < ./data/journals.mab2
+catmandu convert MAB --fix "mab_map('331', 'title'); remove_field('record');" to XLS < ./data/journals.mab2
+catmandu convert MAB --fix "mab_map('331', 'title'); remove_field('record');" to XLS < ./data/journals.mab2 > test.xls
+catmandu convert MAB --fix "mab_map('331', 'title'); remove_field('record');" to YAML < ./data/journals.mab2
+catmandu convert MAB --fix ./fix/mab2.fix to YAML < ./data/journals_mab2.dat
+catmandu convert MAB --fix ./fix/zdb_bibliographic.fix to JSON < ./data/journals.mab2
+catmandu convert MAB --fix ./fix/zdb_bibliographic.fix to YAML < ./data/journals.mab2
+catmandu convert MAB --fix ./fix/zdb_bibliographic.fix to YAML < ./data/journals.mab2
+catmandu convert MAB --fix zdb_bibliographic.fix to YAML < ../data/journals.mab2
+catmandu convert MAB --type MABxml --fix ./data/mab2.fix to JSON < ./data/mab2.xml
+catmandu convert MAB --type MABxml --fix ./fix/mab2.fix  to JSON < ./data/journals_mab2.xml
+catmandu convert MAB --type MABxml --fix ./fix/mab2.fix to JSON < ./data/journals_mab2.xml
+catmandu convert MAB --type MABxml --fix ./fix/zdb_bibliographic.fix to YAML < ./data/mab2.xml
+catmandu convert MAB --type MABxml  to JSON < ./data/journals_mab2.xml
+catmandu convert MAB --type MABxml to JSON < ./data/mab2.xml
+catmandu convert MAB --type MABxml to JSON < ./mab2.xml
+catmandu convert MAB --type MABxml to YAML < ./data/mab2.xml
+catmandu convert MAB --type XML to YAML < ./data/mab2.xml
+catmandu convert MAB to JSON < ./data/journals.mab2 
+catmandu convert MAB to JSON < ./data/journals.mab2 catmandu convert MAB to JSON < ./data/journals.mab2
+catmandu convert MAB to YAML < ./data/journals.mab2
+catmandu convert MAB to YAML < ./data/mab2.dat
+catmandu convert MARC --type USMARC to JSON < ./data/camel.mrc
+catmandu convert MARC -type XML to YAML < ./data/camel.xml
+catmandu convert MARC to JSON < ./data/camel.mrc
+catmandu convert MARC to YAML < ./data/camel.mrc
+catmandu convert MARC to YAML < ./data/camel.mrccatmandu convert MARC to YAML < ./data/camel.mrc
+catmandu convert MARC to YAML < ./data/camel.xml
+catmandu convert PICA --type XML to YAML < ./data/pica.xml
+catmandu convert PICA to JSON < ./data/pica.xml
+catmandu convert PICA to YAM < ./data/pica.xml
+catmandu convert PICA to YAML < ./data/pica.xml
+catmandu count CouchDB --database-name mab --bag mab
+catmandu count ElasticSearch --index-name mab --bag
+catmandu count ElasticSearch --index-name mab --bag mab
+catmandu count ElasticSearch --index-name mab --bag mab --query 'dc.publisher:"Heise"'
+catmandu count ElasticSearch --index-name mab --bag mab --query 'dc.publisher:Heise'
+catmandu count ElasticSearch --index-name mab --bag mab --query 'dcterms.spatial:XA-DE'
+catmandu count MongoDB --database-name mab --bag mab
+catmandu count MongoDB --database-name mab --bag mab --query "{\"dc.publisher\": \"Heise\"}"
+catmandu count MongoDB --database-name mab --bag mab --query "{\"dc.publisher\": \"Heise\"}"catmandu count MongoDB --database-name mab --bag mab --query "{"dc.publisher\": \"Heise\"}"
+catmandu data --from-store CouchDB --from-database_name mab --from-bag mab --query "{\"dc.identifier\": \"47918-4\"}"
+catmandu data --from-store ElasticSearch --from-index_name mab --from-bag mab --cql-query "identifier exact 47918-4"
+catmandu data --from-store ElasticSearch --from-index_name mab --from-bag mab --cql-query "issued > 2009"
+catmandu data --from-store ElasticSearch --from-index_name mab --from-bag mab --cql-query "issued > 2009" --into-exporter CSV --fix 'retain_field("_id")'
+catmandu data --from-store ElasticSearch --from-index_name mab --from-bag mab --cql-query "issued > 2009" --into-exporter YAML
+catmandu data --from-store ElasticSearch --from-index_name mab --from-bag mab --cql-query "issued exact 2009"
+catmandu data --from-store ElasticSearch --from-index_name mab --from-bag mab --cql-query "publisher exact Heise"
+catmandu data --from-store ElasticSearch --from-index_name mab --from-bag mab --query "dc.identifier:\"47918-4\""
+catmandu data --from-store ElasticSearch --from-index_name mab --from-bag mab --query "dcterms.spatial:\"XA-DE\""
+catmandu data --from-store MongoDB --from-database_name mab --bag mab --query '{"dc.identifier":"54251-9"}'
+catmandu data --from-store MongoDB --from-database_name mab --bag mab --query "{\"dc.identifier\": \"47918-4\"}"
+catmandu data --from-store MongoDB --from-database_name mab --from-bag mab --query "{\"dc.identifier\": \"47918-4\"}"
+catmandu data --from-store MongoDB --from-database_name mab --from bag mab --query "{\"dc.identifier\": \"47918-4\"}"
+catmandu data --from-store MongoDB --from-database_name mab --from_bag mab --query "{\"dc.identifier\": \"47918-4\"}"
+catmandu delete CouchDB --database_name mab --bag mab
+catmandu delete CouchDB --database_name mab --bag mab --q '"dc.identifier":"54251-9"'
+catmandu delete ElasticSearch --index_name mab --bag mab
+catmandu delete ElasticSearch --index_name mab --bag mab --q '"dc.identifier":"126275-0"'
+catmandu delete ElasticSearch --index_name mab --bag mab --q '"dc.identifier":"54251-9"'
+catmandu delete ElasticSearch --index_name mab --bag mab --q '"identifier":"126275-0"'
+catmandu delete ElasticSearch --index_name mab --bag mab --q '_id:"1262750"'
+catmandu delete MongoDB --database_name mab --bag mab
+catmandu delete MongoDB --database_name mab --bag mab --q '{"_id":"1262750"}'
+catmandu export CouchDB --database_name mab --bag mab to JSON
+catmandu export CouchDB --database_name marc --bag marc to JSON
+catmandu export ElasticSearch --index_name mab --bag mab to JSON
+catmandu export MongoDB --database_name mab --bag mab to JSON
+catmandu export MongoDB --database_name marc --bag marc to JSON
+catmandu import MAB --fix ./fix/zdb_bibliographic.fix to CouchDB --database_name mab --bag mab < ./data/journals.mab2
+catmandu import MAB --fix ./fix/zdb_bibliographic.fix to ElasticSearch --database_name mab --bag mab < ./data/journals.mab2
+catmandu import MAB --fix ./fix/zdb_bibliographic.fix to ElasticSearch --index_name mab --bag mab < ./data/journals.mab2
+catmandu import MAB --fix ./fix/zdb_bibliographic.fix to JSON < ./data/journals.mab2
+catmandu import MAB --fix ./fix/zdb_bibliographic.fix to MongoDB --database_name mab --bag mab < ./data/journals.mab2
+catmandu import MARC --type USMARC to CouchDB --database_name marc --bag marc < ./data/camel.mrc
+catmandu move CouchDB --database_name mab --bag mab to MongoDB --database_name mab --bag mab
+catmandu move ElasticSearch --database_name moved --bag moved --query "dc.identifier: \"47918-4\"" to ElasticSearch --index_name selected --bag selected
+catmandu move ElasticSearch --database_name moved --bag moved --query "dc.identifier: \"47918-4\"" to ElasticSearch --index_name selected --bag selectedcatmandu move ElasticSearch --index_name moved --bag moved --query "dc.identifier: \"47918-4\"" to ElasticSearch --index_name selected --bag selected
+catmandu move ElasticSearch --index_name moved --bag moved --query "dc.identifier:\"47918-4\"" to ElasticSearch --index_name selected --bag selected
+catmandu move MongoDB --database_name mab --bag mab --q '{"_id":"126275-0"}' to ElasticSearch --index_name moved --bag moved
+catmandu move MongoDB --database_name mab --bag mab --q '{"_id":"1262750"}' to ElasticSearch --index_name moved --bag moved
+catmandu move MongoDB --database_name mab --bag mab --query "{\"dc.identifier\": \"47918-4\"}" to ElasticSearch --index_name moved --bag moved
+catmandu move MongoDB --database_name mab --bag mab --query "{\"dcterms.spatial\": \"XA-DE\"}" to ElasticSearch --index_name moved --bag moved
+catmandu move MongoDB --database_name mab --bag mab to CouchDB --database_name mab --bag mab
+catmandu move MongoDB --database_name mab --bag mab to ElasticSearch --index_name mab --bag mab
