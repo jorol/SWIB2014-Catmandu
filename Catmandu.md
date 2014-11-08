@@ -1,3 +1,4 @@
+
 # Catmandu - Importing, transforming, storing and indexing data should be easy
 
 SWIB2014 1 - 3 December 2014 Bonn, Germany
@@ -5,6 +6,39 @@ SWIB2014 1 - 3 December 2014 Bonn, Germany
 Johann Rolschewski / Jakob Voß
 
 Staatsbibliothek zu Berlin, Germany / Verbundzentrale des GBV (VZG), Germany
+
+## Libraries collect data ...
+
+  * books
+  * journals
+  * articles
+  * maps
+  * manuscripts
+  * sheets of music
+  * ...
+
+## Libraries create metadata ... 
+  * bibliographic descriptions
+  * holding informations
+  * references
+  * patron data
+  * ...
+
+## Metadata
+
+![Katalog](./slides/img/code4lib.png "Katalog")
+
+## Metadata
+
+... catalogued in library specific formats (MARC21, MAB2, PICA+, ...) 
+
+... provided via library specific APIs (OAI, SRU, Z39.50, ...)
+
+... used in diverse systems (OPACs, discovery systems, institutional repositories, link resolvers, ...)
+
+## Demand
+
+... for a library specific metadata toolkit
 
 ## LibreCat
 
@@ -18,25 +52,31 @@ Staatsbibliothek zu Berlin, Germany / Verbundzentrale des GBV (VZG), Germany
 
 ... map the fields to a common data model
 
-... store in database or search engine
+... store/index data in databases or search engines
 
 ... export data in various formats
 
-## ETL 
+## Catmandu - core concepts
 
-Extract, Transform, Load 
+* **Items** are the basic unit of data processing in Catmandu. Items may be read, stored, and accessed in many forms.
 
-## Import
+* **Importers** are Catmandu packages to read items into an application. One can also import from remote sources for instance via Atom and OAI-PMH endpoints.
+
+* **Fixes** transforms items, massage the data into any format you like.
+
+* **Stores** are databases and search engines to store/index your data.
+
+* **Exporters** are Catmandu packages to export items from an application.
+
+* **Iterables** are the bread and butter of Catmandu. Every stream of data, if it comes from Iterators, Fixes or Stores is an iterator. Iterators can be connected to other iterators to make processing chains. With Iterators the memory consumption of your program is low: you can process Gigabytes, Terabytes of input data without ever running out of memory.
+
+## Importer/Exporter
 
 AlephX BibTeX MAB2 MARC PICA
-Atom CSV JSON RDF YAML XLS
 
-## Export
+Atom CSV JSON RDF XLS XML YAML
 
-AlephX BibTeX MAB2 MARC PICA
-Atom CSV JSON RDF YAML XLS
-
-## API
+## Importer for APIs
 
 getJSON
 
@@ -44,13 +84,19 @@ OAI
 
 SRU
 
+Z39.50
+
 ## Stores
+
+CHI
 
 DBI
 
-Elascticsearch
+Elasticsearch
 
 MongoDB
+
+Solr
 
 ## CLI
 
@@ -100,17 +146,19 @@ options:
 ## CLI - convert()
 
 ```terminal
-$ cat ./shared/journals_mab2.dat | catmandu convert MAB to JSON
+$ cat ./shared/journals_mab2.dat | catmandu convert MAB2 to JSON
 
-$ catmandu convert MAB to JSON < ./shared/journals_mab2.dat
+$ catmandu convert MAB2 to JSON < ./shared/journals_mab2.dat
 
-$ catmandu convert MAB --type MABxml to JSON < ./shared/journals_mab2.xml
+$ catmandu convert MAB2 --type XML to JSON < ./shared/journals_mab2.xml
 ```
 
 ## CLI - convert()
 
 ```terminal
 $ catmandu convert MARC to JSON < ./shared/camel.mrc
+
+$ catmandu convert MARC --type RAW to JSON < ./shared/camel.mrc
 
 $ catmandu convert MARC --type XML to JSON < ./shared/camel.xml
 ```
@@ -126,7 +174,9 @@ $ catmandu convert PICA to JSON < ./shared/pica.xml
 ## CLI - convert()
 
 ```terminal
-$ catmandu convert CSV to JSON < ./shared/journals.csv
+$ catmandu convert CSV to YAML < ./shared/eu_elections_2014.csv 
+
+$ catmandu convert CSV to CSV --fields Wahlbezirk,DKP,NPD < ./shared/eu_elections_2014.csv 
 
 $ catmandu convert YAML to JSON < ./shared/journals.yml
 ```
@@ -134,25 +184,35 @@ $ catmandu convert YAML to JSON < ./shared/journals.yml
 ## CLI - convert()
 
 ```terminal
-$ catmandu convert MAB --fix ./fix/mab2.fix to CSV --file mab2.csv --fields identifier,title,language < ./shared/journals_mab2.dat
+$ catmandu convert MAB2 --fix ./shared/mab2rdf.fix to CSV --file mab2.csv --fields dc_identifier,dc_title,dc_language < ./shared/journals_mab2.dat
 
-$ catmandu convert MAB --fix ./fix/mab2.fix to XLS --file mab2.xls --fields identifier,title,language < ./shared/journals_mab2.dat
+$ catmandu convert MAB2 --fix ./shared/mab2rdf.fix to XLS --file mab2.xls --fields dc_identifier,dc_title,dc_language < ./shared/journals_mab2.dat
 ```
 
 ## CLI - convert()
 
 ```terminal
-$ cat ./template/test.tt
+$ cat ./shared/test.tt
 [%- FOREACH f IN record %]
 [% _id %] [% f.shift %][% f.shift %][% f.shift %][% f.join(":") %]
 [%- END %]
 
-$ catmandu convert MARC to Template --template D:\Workspace\Catmandu-Workshop2013\template\test.tt < ./shared/camel.mrc
+$ catmandu convert MARC to Template --template ./shared/test.tt < ./shared/camel.mrc
 
-$ cat ./template/marc.tt
-[% _id %] [% authors.0 %]: [% title %]
+$ cat ./shared/marc.tt
+[% _id %] [% dc.creator.0 %]: [% dc.title %]
 
-$ catmandu convert MARC --fix ./fix/marc.fix to Template --template D:\Workspace\Catmandu-Workshop2013\template\marc.tt < ./shared/camel.mrc
+$ catmandu convert MARC --fix ./shared/marc.fix to Template --template ./shared/marc.tt < ./shared/camel.mrc
+```
+
+## CLI - convert()
+
+see https://gbv.github.io/aREF/aREF.html and https://metacpan.org/pod/RDF::aREF
+
+```cmd
+catmandu convert RDF --file ./shared/zdb_resources.rdf to YAML
+catmandu convert MAB2 --type RAW --fix ./shared/mab2rdf.fix to RDF --type ttl < ./shared/mab2.dat
+catmandu convert MAB2 --type RAW --fix ./shared/mab2rdf.fix to RDF --type xml < ./shared/mab2.dat
 ```
 
 ## CLI - import()
@@ -175,11 +235,19 @@ options:
 ## CLI - import()
 
 ```terminal
-$ catmandu import MARC --type USMARC to MongoDBDB --database_name marc --bag marc < ./shared/camel.mrc
+$ catmandu import MARC --type RAW --fix ./shared/marc.fix to MongoDB --database_name marc --bag marc < ./shared/camel.mrc
 
-$ catmandu import MAB --fix ./shared/mab2.fix to MongoDB --database_name mab --bag mab  < ./shared/journals_mab2.dat
+$ catmandu import MAB2 --fix ./shared/mab2rdf.fix to MongoDB --database_name mab --bag mab  < ./shared/journals_mab2.dat
 
-$ catmandu import MAB --fix ./fix/mab2.fix to ElasticSearch --index_name mab --bag mab < ./shared/journals_mab2.dat
+$ mongo
+> use marc
+> db.marc.find()
+
+$ catmandu import MARC --type RAW --fix ./shared/marc.fix to Elasticsearch --index_name marc --bag marc < ./shared/camel.mrc
+
+$ catmandu import MAB2 --fix ./shared/mab2rdf.fix to Elasticsearch --index_name mab --bag mab < ./shared/journals_mab2.dat
+
+$ curl 'http://localhost:9200/mab/_search?q=*'
 ```
 
 ## CLI - export()
@@ -205,7 +273,10 @@ options:
 ```terminal
 $ catmandu export MongoDB --database_name mab --bag mab to JSON
 
-$ catmandu export ElasticSearch --index_name mab --bag mab to JSON
+$ catmandu export Elasticsearch --index_name marc --bag marc to JSON
+
+$ catmandu export Elasticsearch --index_name mab --bag mab --query '_id:"http://example.org/1142708-5"'
+
 ```
 
 ## CLI - count()
@@ -215,7 +286,7 @@ catmandu count [-?hLq] [long options...]
 
 examples:
 
-catmandu count ElasticSearch --index_name shop --bag products 
+catmandu count Elasticsearch --index_name shop --bag products 
     --query 'brand:Acme'
 
 options:
@@ -228,15 +299,14 @@ options:
 ## CLI - count()
 
 ```terminal
-$ catmandu count CouchDB --database_name marc --bag marc
-
 $ catmandu count MongoDB --database_name mab --bag mab
 
-$ catmandu count MongoDB --database_name mab --bag mab --query "{\"dc.publisher\": \"Heise\"}"
+$ catmandu count MongoDB --database_name marc --bag marc --query '{"dc.creator": "Wall, Larry."}'
 
-$ catmandu count ElasticSearch --index_name mab --bag mab
+$ catmandu count Elasticsearch --index_name mab  --bag mab
+$ catmandu count Elasticsearch --index_name mab --bag mab --query 'dc_title:"magazin"'
 
-$ catmandu count ElasticSearch --index_name mab --bag mab --query 'dc.publisher:"Heise"'
+$ catmandu count Elasticsearch --index_name marc --bag marc --query 'dc.creator:"wall"'
 ```
 
 ## CLI - delete()
@@ -246,7 +316,7 @@ catmandu delete [-?hLq] [long options...]
 
 examples:
 
-catmandu delete ElasticSearch --index_name items 
+catmandu delete Elasticsearch --index_name items 
     --bag book -q 'title:"Programming Perl"'
 
 options:
@@ -259,15 +329,13 @@ options:
 ## CLI - delete()
 
 ```terminal
-$ catmandu delete CouchDB --database_name marc --bag marc
-
 $ catmandu delete MongoDB --database_name mab --bag mab
 
-$ catmandu delete ElasticSearch --index_name mab --bag mab
+$ catmandu delete Elasticsearch --index_name mab
 
-$ catmandu delete MongoDB --database_name mab --bag mab --q '{"_id":"1262750"}'
+$ catmandu delete MongoDB --database_name marc --bag marc --query '{"dc.creator": "Wall, Larry."}'
 
-$ catmandu delete ElasticSearch --index_name mab --bag mab --q '_id:"1262750"'
+$ catmandu delete Elasticsearch --index_name mab --bag mab --query '_id:"http://example.org/1142708-5"'
 ```
 
 ## CLI - move()
@@ -278,7 +346,7 @@ catmandu move [-?hLqv] [long options...]
 examples:
 
 catmandu move MongoDB --database_name items --bag book 
-    to ElasticSearch --index_name items --bag book
+    to Elasticsearch --index_name items --bag book
 
 options:
 
@@ -292,13 +360,11 @@ options:
 ## CLI - move()
 
 ```terminal
-$ catmandu move MongoDB --database_name mab --bag mab to ElasticSearch --index_name mab --bag mab
+$ catmandu move MongoDB --database_name marc --bag marc to Elasticsearch --index_name moved --bag moved
 
-$ catmandu move MongoDB --database_name mab --bag mab to CouchDB --database_name mab --bag mab
+$ catmandu move MongoDB --database_name marc --bag marc --query '{"dc.creator": "Wall, Larry."}' to Elasticsearch --index_name moved --bag moved
 
-$ catmandu move MongoDB --database_name mab --bag mab --query "{\"dcterms.spatial\": \"XA-DE\"}" to ElasticSearch --index_name moved --bag moved
-
-$ catmandu move ElasticSearch --index_name moved --bag moved --query "dc.identifier:\"47918-4\"" to ElasticSearch --index_name selected --bag selected
+$ catmandu move Elasticsearch --index_name mab --bag mab --query '_id:"http://example.org/1142708-5"' to Elasticsearch --index_name selected --bag selected
 ```
 
 ## CLI - data()
@@ -328,15 +394,15 @@ catmandu data [-?hLqv] [long options...]
 ## CLI - data()
 
 ```terminal
-$ catmandu data --from-store MongoDB --from-database_name mab --from-bag mab --query "{\"dc.identifier\": \"47918-4\"}"
+$ catmandu data --from-store MongoDB --from-database_name marc --from-bag marc --query '{"dc.creator": "Wall, Larry."}'
 
-$ catmandu data --from-store ElasticSearch --from-index_name mab --from-bag mab --query "dc.identifier:\"47918-4\""
+$ catmandu data --from-store Elasticsearch --from-index_name marc --query "dc.creator:\"Wall, Larry.\""
 
-$ catmandu data --from-store ElasticSearch --from-index_name mab --from-bag mab --cql-query "publisher exact Heise"
+$ catmandu data --from-store Elasticsearch --from-index_name mab --from-bag mab --cql-query "publisher exact Heise"
 
-$ catmandu data --from-store ElasticSearch --from-index_name mab --from-bag mab --cql-query "issued > 2009" --into-exporter YAML
+$ catmandu data --from-store Elasticsearch --from-index_name mab --from-bag mab --cql-query "issued > 2009" --into-exporter YAML
 
-$ catmandu data --from-store ElasticSearch --from-index_name mab --from-bag mab --cql-query "issued > 2009" --into-exporter CSV --fix 'retain_field("_id")'
+$ catmandu data --from-store Elasticsearch --from-index_name mab --from-bag mab --cql-query "issued > 2009" --into-exporter CSV --fix 'retain_field("_id")'
 ```
 
 ## CLI - APIs
@@ -349,13 +415,13 @@ $ catmandu convert SRU --base http://sru.gbv.de/gvk --recordSchema picaxml --par
 $ http://search.cpan.org/~voj/Catmandu-Importer-getJSON-0.1.1/lib/Catmandu/Importer/getJSON.pm
 ```
 
-## Catmandu::Fix
+## Fix
 
 ... easy data manipulation by non programmers
 
 ... small Perl DSL language
 
-## Catmandu::Fix - Path
+## Fix - Path
 
 ```perl
 $append   - Add a new item at the end of an array
@@ -364,7 +430,7 @@ $first    - Syntactic sugar for index '0' (the head of the array)
 $last     - Syntactic sugar for index '-1' (the tail of the array)
 ```
 
-## Catmandu::Fix::marc_map
+## Fix - marc_map
 
 ```perl
     marc_map('008_/35-38','language');
@@ -375,7 +441,7 @@ $last     - Syntactic sugar for index '-1' (the tail of the array)
     remove_field('record');
 ```
 
-## Catmandu::Fix::mab_map
+## Fix - mab_map
 
 ```perl
 mab_map('001','identifier');
@@ -389,7 +455,7 @@ mab_map('700[bc]','subject.$append');
 remove_field('record');
 ```
 
-## Catmandu::Fix::pica_map
+## Fix - pica_map
 
 ```perl
 pica_map('001A0','date');
@@ -399,137 +465,131 @@ pica_map('027A[01]a','furtherTitle');
 remove_field('record');
 ```
 
-## Catmandu::Fix
+## Fix - field
 
 ```perl
-# Add a new field
-add_field('name','Smith');  # {name => 'Smith'}
-
-# Change a value
-set_field('name','Doe');  # {name => 'Doe'}
-
-# Append to a value
-append('name', ', John');  # {name => 'Doe, John'}
-
-# Prepend to a value
-prepend('name', ', Mr. ');  # {name => 'Mr. Doe, John'}
-
-# Extract a substring from the value
-substring('name',0,3);  # {name => 'Mr.'}
+add_field('name','Smith');
+# { name => 'Smith' }
+set_field('name','Doe');
+# { name => 'Doe'}
+copy_field('name','title');
+# { name => 'Doe, John', title => 'Dr.' }
+remove_field('title');
+# { name => 'Doe, John' }
+move_field('name','dc.creator');
+# { 'dc.creator' => 'Doe, John' }
+retain_field('dc.creator')
+# delete every field except named field
 ```
 
-## Catmandu::Fix
-
+## Fix - field
 ```perl
-# {format => 'print'}                    
-# Copy field
-copy_field('format','dc.format');
-
-# Delete field
-remove_field('format');
-
-# Move field
-move_field('format','dc.format');
-
-# Delete every field except named field
-retain_field('dc.format')
+# { subjects => 'Perl,R,JavaScript' }
+split_field('subjects',',');
+sort_field('subjects');
+# { subjects => ['JavaScript', 'Perl', 'R'] }
+join_field('subjects','; ');
+# { subjects => 'JavasSript; Perl; R' }
 ```
 
-## Catmandu::Fix
-
+## Fix - string
 ```perl
-# {format => 'marc'}
-# Capitalize a value
-capitalize('format');  # {format => 'Marc'}
-
-# Uppercase a value
-upcase('format');  # {format => 'MARC'}
-
-# Downcase a value
-downcase('format');  # {format => 'marc'}   
+# { name => 'Doe'}
+upcase('name');
+# { name => 'DOE' }
+downcase('name');
+# { name => 'doe' }
+capitalize('name');
+# { name => 'Doe' }
+append('name',', John');
+# { name => 'Doe, John' }
+prepend('name',', Dr. ');
+# { name => 'Dr. Doe, John' }
 ```
 
-## Catmandu::Fix
-
+## Fix - string
 ```perl
-# {foo => '   abc   '}
-# Trim whitespace
-trim('foo');  # {foo => 'abc'}
-trim('foo', 'whitespace');  # {foo => 'abc'};
-
-# trim non-word characters
-# {foo => '   abc  / : .'}
-trim('foo', 'nonword');  # {foo => 'abc'};
+# { name => ' Doe,  '}
+trim('name');
+# { name => 'Doe,' }
+trim('name','nonword');
+# { name => 'Doe' }
+substring('name', 0, 1);
+# { name => 'D' }
 ```
 
-## Catmandu::Fix
-
+## Fix - string
 ```perl
-# {ddc => ['000', '004', '600']}
-# Join elements of a field
-join_field('ddc',',');  # {ddc => '001,004,600'}
-
-# Split string to array
-split_field('ddc', ',')  # {ddc => ['000', '004', '600']}
-
-# Count elements in array
-count('ddc');  # 3
-```
-
-## Catmandu::Fix
-
-```perl
-# {format => 'MAB'}
-# Search and replace using regex expressions
-# Replace characters in string
-replace_all('format', 'a', 'x')  # {format => 'MxB'}    
+# {format => 'MARC21'}
+replace_all('format', '\d', '');
+# {format => 'MARC'}    
 
 # {id => ['123-4', '567-X']}
-# Search and replace in array
-replace_all('identifier.*', '-[0-9xX]$', '') # {id => ['123', '567']}
+replace_all('id.*', '-[0-9xX]$', '');
+# {id => ['123', '567']}
 ```
 
-## Catmandu::Fix
-
+## Fix - count & sum
 ```perl
-# lookup value of 'ddc' in dict.csv and 
-# replace the value or set it to '000'
-lookup('ddc', 'dict.csv', -default=>'000');
-
-# lookup value of 'ddc' in dict.csv and 
-# replace the value or delete nothing found
-lookup('ddc', 'dict.csv', -delete=>'1');   
-
-# lookup value of 'ddc' in MongoDB and
-# replace it with the data found
-lookup_in_store('ddc', 'MongoDB', -database_name => 'lookups'); 
-lookup_in_store('ddc', 'MongoDB', -delete => 1);
+# { numbers => [1, 2, 3] }
+copy_field('numbers','count');
+count('count');
+copy_field('numbers','sum');
+sum('sum');
+# { numbers => [1, 2, 3], count => 3, sum => 6 }
 ```
 
-## Catmandu::Fix
-
+## Fix - dictionaries
+```terminal
+$ cat dict.csv
+004,Informatik
+310,Statistik
+510,Mathematik
+```
 ```perl
-# set value of field 'ddc' to 'Informatik' 
-# if field 'ddc' has the value '004'
-if_any_match('ddc', '004');
-  set_field('ddc', 'Informatik');
-end();
-# inverted
-unless_any_match('ddc', '000');
-  lookup('ddc', 'dict.csv',  -delete=>'1');
-end();
-# lookup 'ddc' value in dict.csv
+# { ddc => '004' }
+lookup('ddc', 'dict.csv', -default=>'Allgemeines');
+lookup('ddc', 'dict.csv', -delete=>'1');
+# { ddc => 'Informatik' }
+
+lookup_in_store('ddc', 'MongoDB', -database_name => 'lookups');
+```
+
+## Fix - conditions
+```perl
 if_exists('ddc');
-  lookup('ddc', 'dict.csv',  -delete=>'1');
+    lookup('ddc', 'dict.csv',  -delete=>'1');
 end();
-# inverted
+
 unless_exists('ddc');
-  add_field('ddc', '000');
+    add_field('ddc', '000');
+end();
+
+if_any_match('ddc', '004');
+    set_field('subject', 'Informatik');
+end();
+
+unless_any_match('subject', '[a-zA-Z]+');
+    lookup('subject', 'dict.csv',  -delete=>'1');
 end();
 ```
 
-## Catmandu::Fix
+## Fix - nested data structures
 
+```perl
+add_field('dc.title','code4lib');
+add_field('dc.subject.$append', 'Computer');
+add_field('dc.subject.$append', 'Informatik');
+add_field('dc.subject.$append', 'Bibliothek');
+add_field('dc.identifier.$append.zdbid','2415107-5');
+add_field('dc.identifier.$append.ocn','502377032');
+add_field('dc.identifier.$append.issn','1940-5758');
+remove_field('dc.identifier.$first');
+remove_field('dc.subject.1');
+remove_field('dc.subject.*');
+```
+
+## Fix - nested data structures
 ```perl
 # Collapse deep nested hash to a flat hash
 collapse();
@@ -541,7 +601,7 @@ expand();
 clone();
 ```
 
-## Catmandu::Fix
+## Fix - cmd
 
 ```perl
 # Use an external program that can read JSON 
@@ -551,55 +611,139 @@ cmd("java MyClass");
 
 ## config
 
-```yaml
-    ---
-    store:
-      mo:
-       package: MongoDB
-       options:
-        database_name: bibliographic
-        bag: marc
+```
+$ cat catmandu.yml
+---
+store:
+  mdb:
+   package: MongoDB
+   options:
+    database_name: mydb
+  els:
+   package: Elasticsearch
+   options:
+    index_name: mydb
+  sol:
+   package: Solr
+   options:
+    url: http://localhost:8983/solr
 
+$ catmandu import JSON to mdb < records.json
+$ catmandu import MARC to els < records.mrc
+$ catmandu import YAML to sol < records.yaml
+$ catmandu export mdb to JSON
+$ catmandu export els to JSON
+$ catmandu export sol
 ```
 
-## Catmandu::Importer
-    
-* Parser
-* Importer
-* Fix
+## Extensions
 
-## Catmandu::Importer
-    
-    D:\WORKSPACE\DIST\CATMANDU-PICA
-    │   ...
-    │
-    ├───lib
-    │   └───Catmandu
-    │       │   PICA.pm
-    │       │
-    │       ├───Fix
-    │       │       pica_map.pm
-    │       │
-    │       └───Importer
-    │               PICA.pm
-    │
-    └───t
-            ...
+```bash
+├── Catmandu
+│   ├── Cmd
+│   │   └── foo.pm
+│   ├── Exporter
+│   │   ├── Foo.pm
+│   ├── Fix
+│   │   ├── foo_map.pm
+│   ├── Importer
+│   │   ├── Foo.pm
+│   ├── Store
+│   │   ├── Foo
+│   │   │   ├── Bag.pm
+│   │   │   └── Searcher.pm
+│   │   ├── Foo.pm
+```
 
-## Catmandu::Fix
+## CMD
 
-    package Catmandu::Fix::normalize_title;
+```perl
+package Catmandu::Importer::Hello;
 
-    use Moo;
+use Catmandu::Sane;
+use Moo;
+with 'Catmandu::Importer';
 
-    sub fix {
-        my ($self, $record) = @_;
-        if ( $record->{dc}->{title} ) {
-            $record->{dc}->{title} =~ s/[\x{98},\x{9c}]//g;
-        }
-        $record; 
-    }
+sub generator {
+    my ($self) = @_;
+    state $fh = $self->fh;
+    state $n = 0;
+    return sub {
+        my $line = $self->readline or return;
+        my ($name) = split( ',', $line );
+        return $name
+            ? { "hello" => $name }
+            : { "hello" => 'World' };
+    };
+}
 
-    1;
+1;
+```
+
+## Fix
+
+```perl
+package Catmandu::Fix::hello_world;
+
+use Moo;
+
+sub fix {
+    my ($self,$data) = @_;
+
+    $data->{hello} = 'World';
+
+    return $data;
+}
+
+1;
+```
+
+## CMD
+
+```perl
+package Catmandu::Cmd::hello_world;
+use parent 'Catmandu::Cmd';
+ 
+sub command_opt_spec {
+   (
+       [ "greeting|g=s", "provide a greeting text" ],
+   );
+}
+ 
+sub description {
+   <<EOS;
+examples:
+catmandu hello_world --greeting "Hoi"
+options:
+EOS
+}
+ 
+sub command {
+   my ($self, $opts, $args) = @_;
+   my $greeting = $opts->greeting // 'Hello';
+   print "$greeting, World!\n"
+}
+ 
+1;
+```
+
+## Extensions
+
+```terminal
+catmandu -I ./lib convert Hello < ./shared/names.csv 
+catmandu -I ./lib convert Hello --fix "hello_world()" 
+    < ./shared/names.csv
+catmandu -I ./lib hello_world --greeting Moin
+```
+
+# Links
+
+http://librecat.org
+
+http://librecat.org/Catmandu/
+
+http://metacpan.org/release/Catmandu
+
+http://github.com/LibreCat/Catmandu
 
 

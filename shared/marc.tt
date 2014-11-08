@@ -1,1 +1,1 @@
-[% _id %] [% authors.0 %]: [% title %]
+[% _id %] [% dc.creator.0 %]: [% dc.title %]

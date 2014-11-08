@@ -1,40 +1,43 @@
 # Catmandu VM
 
-## Installation
+## User
 
-OS: Debian 7.6.0 i386
+**USR:PWD**
 
-User: catmandu
+root:catmandu
 
-PWD: catmandu
+catmandu:catmandu
+
+## SSH from HOST to GUEST
+
+The best way to login to a guest Linux VirtualBox VM is port forwarding. By default, you should have one interface already which is using NAT. Then go to the Network settings and click the Port Forwarding button. Add a new Rule:
+
+    host port: 3022
+    guest port: 22
+    name: ssh
+    other fields left blank
+
+SSH from host to guest:
 
 ```terminal
-su -
-apt-get upgrade
-apt-get install build-essential libexpat1-dev libssl-dev libxml2-dev libxslt1-dev libgdbm-dev git curl wget
+    ssh -p 3022 catmandu@127.0.0.1
+```
 
-wget -O 10gen-gpg-key.asc http://docs.mongodb.org/10gen-gpg-key.asc
-apt-key add 10gen-gpg-key.asc
-echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | tee /etc/apt/sources.list.d/mongodb.list
-apt-get update
-apt-get install mongodb
+## Copy files from HOST to GUEST
 
-apt-get install openjdk-7-jre-headless
-wget -O elascticsearch-key.asc - http://packages.elasticsearch.org/GPG-KEY-elasticsearch
-apt-key add elascticsearch-key.asc
-echo 'deb http://packages.elasticsearch.org/elasticsearch/1.3/debian stable main' | tee /etc/apt/sources.list.d/elasticsearch.list
-apt-get update
-apt-get install elasticsearch
+Copy files from host to guest:
 
-cpan App::cpanminus
-cpanm Task::Catmandu
-cpanm Catmandu::PICA
-cpanm Catmandu::MAB2
-cpanm Catmandu::XML
-cpanm Catmandu::RDF
-cpanm Catmandu::Wikidata
+```terminal
+    scp -P 3022 -r ./Basel2014-Catmandu catmandu@127.0.0.1:/home/catmandu
+```
 
-cpanm Mango
+## Set keyboard layout
 
-shutdown -h now
+```terminal
+# root
+$ su
+# change layout
+$ dpkg-reconfigure keyboard-configuration
+# restart
+$ shutdown -r 0 
 ```
