@@ -410,9 +410,13 @@ $ catmandu data --from-store Elasticsearch --from-index_name mab --from-bag mab 
 ```terminal
 $ catmandu convert OAI --url http://pub.uni-bielefeld.de/oai to JSON
 
-$ catmandu convert SRU --base http://sru.gbv.de/gvk --recordSchema picaxml --parser picaxml --query "pica.iss=0939-4362" to JSON    
+$ catmandu convert SRU --base http://sru.gbv.de/gvk --recordSchema picaxml 
+    --parser picaxml --query "pica.iss=0939-4362" to JSON    
 
-$ http://search.cpan.org/~voj/Catmandu-Importer-getJSON-0.1.1/lib/Catmandu/Importer/getJSON.pm
+$ catmandu convert getJSON --from http://example.org/alice.json to YAML
+
+$ catmandu convert getJSON --dry 1 --url http://{domain}/robots.txt 
+    < domains
 ```
 
 ## Fix

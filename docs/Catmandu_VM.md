@@ -28,7 +28,7 @@ SSH from host to guest:
 Copy files from host to guest:
 
 ```terminal
-    scp -P 3022 -r ./Basel2014-Catmandu catmandu@127.0.0.1:/home/catmandu
+    scp -P 3022 -r ./SWIB2014-Catmandu catmandu@127.0.0.1:/home/catmandu
 ```
 
 ## Set keyboard layout
