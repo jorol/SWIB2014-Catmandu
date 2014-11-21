@@ -1,14 +1,32 @@
 # Catmandu VM
 
-## User
+## Software requirements
 
-**USR:PWD**
+* Download and install VirtualBox <https://www.virtualbox.org/wiki/Downloads>
 
-root:catmandu
+Windows user only:
 
-catmandu:catmandu
+* Download and install a ssh client (e.g. Putty <http://www.chiark.greenend.org.uk/~sgtatham/putty/>)
+* Download and install a scp client (e.g. WinSCP <http://winscp.net/eng/docs/lang:de>)
+* Download and install a text editor (e.g. Notepad++ <http://notepad-plus-plus.org/>)
 
-## SSH from HOST to GUEST
+## VM
+
+* Download a virtual machine image (ask the organisers for login details): 
+    - _minimal_ version <http://jorol.de/catmandu/catmandu_cli.ova>
+    - _GUI_ version <http://jorol.de/catmandu/catmandu_gui.ova>
+* Import the virtual machine in VirtualBox (see <https://docs.oracle.com/cd/E26217_01/E26796/html/qs-import-vm.html>)
+* Start the virtual machine (and connect via ssh)
+
+### User
+
+* _minimal_ VM:
+    - User: catmandu
+    - Password: catmandu
+
+### SSH from HOST to GUEST 
+
+#### _minimal_ VM:
 
 The best way to login to a guest Linux VirtualBox VM is port forwarding. By default, you should have one interface already which is using NAT. Then go to the Network settings and click the Port Forwarding button. Add a new Rule:
 
@@ -23,7 +41,9 @@ SSH from host to guest:
     ssh -p 3022 catmandu@127.0.0.1
 ```
 
-## Copy files from HOST to GUEST
+### Copy files from HOST to GUEST
+
+#### _minimal_ VM:
 
 Copy files from host to guest:
 
@@ -31,7 +51,9 @@ Copy files from host to guest:
     scp -P 3022 -r ./SWIB2014-Catmandu catmandu@127.0.0.1:/home/catmandu
 ```
 
-## Set keyboard layout
+### Set keyboard layout
+
+#### _minimal_ VM:
 
 ```terminal
 # root
@@ -41,3 +63,7 @@ $ dpkg-reconfigure keyboard-configuration
 # restart
 $ shutdown -r 0 
 ```
+
+#### _GUI_ VM:
+
+Go to __'System -> Preferences -> Keyboard'__. Tab __'Layouts'__, __'Add...'__ your keyboard layout and mark it as __'Default'__.
