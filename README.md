@@ -20,17 +20,7 @@ Laptop with VirtualBox installed. Organisers will provide a VirtualBox image (Li
 
 ## VM
 
-The VirtualBox image is available [here](http://jorol.de/catmandu/catmandu.ova). Ask the organisers for login details.
-
-The best way to login to a guest Linux VirtualBox VM via SSH is port forwarding. By default, you should have one network interface already which is using NAT. Then go to the "Network" settings and click the "Port Forwarding" button. Add a new Rule:
-
-    Host port 3022, guest port 22, name ssh, other left blank.
-
-You can now login from host system to guest system via SSH:
-
-    # User name: catmandu
-    # Password: catmandu
-    ssh -p 3022 catmandu@127.0.0.1
+See [Catmandu_VM.md](https://github.com/jorol/SWIB2014-Catmandu/blob/master/docs/Catmandu_VM.md).
 
 ## Agenda
 
@@ -62,7 +52,7 @@ You can now login from host system to guest system via SSH:
 
 [LibreCat:github](https://github.com/LibreCat/)
 
-[Catmandu:wiki](https://github.com/LibreCat/Catmandu/wiki/)
+[Catmandu:wiki](http://librecat.org/Catmandu/)
 
 [Catmandu:cpan](https://metacpan.org/search?q=Catmandu)
 
