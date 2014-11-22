@@ -815,5 +815,6 @@ http://metacpan.org/release/Catmandu
 
 http://github.com/LibreCat/Catmandu
 
-.center[![XKCD](./slides/img/xkcd_perl.png "xkcd.com/519/")]
-.center[<small>\[Comic by [Randall Munroe](http://xkcd.com/519/), [CC BY-NC 2.5](https://creativecommons.org/licenses/by-nc/2.5/)\]</small>]
+![XKCD](./slides/img/xkcd_perl.png "xkcd.com/519/")
+
+Comic by [Randall Munroe](http://xkcd.com/519/), [CC BY-NC 2.5](https://creativecommons.org/licenses/by-nc/2.5/)
