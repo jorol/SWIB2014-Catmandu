@@ -1,11 +1,9 @@
+# Catmandu
+### Importing, transforming, storing and indexing data should be easy
 
-# Catmandu - Importing, transforming, storing and indexing data should be easy
-
-SWIB2014 1 - 3 December 2014 Bonn, Germany
-
-Johann Rolschewski / Jakob Voß
-
-Staatsbibliothek zu Berlin, Germany / Verbundzentrale des GBV (VZG), Germany
+#### SWIB2014 1 - 3 December 2014 Bonn, Germany
+##### Johann Rolschewski / Jakob Voß
+###### Staatsbibliothek zu Berlin, Germany / Verbundzentrale des GBV (VZG), Germany
 
 ## Libraries collect data ...
 
@@ -25,12 +23,11 @@ Staatsbibliothek zu Berlin, Germany / Verbundzentrale des GBV (VZG), Germany
   * ...
 
 ## Metadata
-
 ![Katalog](./slides/img/code4lib.png "Katalog")
 
 ## Metadata
 
-... catalogued in library specific formats (MARC21, MAB2, PICA+, ...) 
+... catalogued in library specific formats (MARC, MAB2, PICA, ...) 
 
 ... provided via library specific APIs (OAI, SRU, Z39.50, ...)
 
@@ -42,19 +39,15 @@ Staatsbibliothek zu Berlin, Germany / Verbundzentrale des GBV (VZG), Germany
 
 ## LibreCat
 
-... is an open collaboration of the three university libraries of Lund, Gent and Bielefeld
+... is an open collaboration of the three university libraries of **Bielefeld**, **Gent** and **Lund**
+
+... joined by developers of other institutions
 
 ## Catmandu
 
-... provide the open source set of programming components to build up digital libraries and research services 
+... provides an open source set of programming components to build up digital libraries and research services 
 
-... import data from various sources
-
-... map the fields to a common data model
-
-... store/index data in databases or search engines
-
-... export data in various formats
+... supports "Extract, Transform, Load" (ETL) processes
 
 ## Catmandu - core concepts
 
@@ -68,7 +61,7 @@ Staatsbibliothek zu Berlin, Germany / Verbundzentrale des GBV (VZG), Germany
 
 * **Exporters** are Catmandu packages to export items from an application.
 
-* **Iterables** are the bread and butter of Catmandu. Every stream of data, if it comes from Iterators, Fixes or Stores is an iterator. Iterators can be connected to other iterators to make processing chains. With Iterators the memory consumption of your program is low: you can process Gigabytes, Terabytes of input data without ever running out of memory.
+* **Iterables** - Every stream of data, if it comes from Iterators, Fixes or Stores is an iterator. With Iterators the memory consumption of your program is low: you can process Gigabytes, Terabytes of input data without ever running out of memory.
 
 ## Importer/Exporter
 
@@ -117,14 +110,30 @@ Available commands:
            data: store, index, search, import, export or convert objects
          delete: delete objects from a store
          export: export objects from a store
-  exporter_info: list installed Catmandu exporters
-       fix_info: list installed Catmandu fixes
          import: import objects into a store
-  importer_info: list installed Catmandu importers
-    module_info: list installed perl modules in a given namespace
+           info: list installed Catmandu modules
            move: move objects to another store
            repl: interactive shell for Catmandu
-     store_info: list installed Catmandu stores
+```
+
+---
+
+class: middle
+## CLI - info
+
+```terminal
+$ catmandu info
+$ catmandu help <command>
+```
+
+or
+
+```terminal
+$ catmandu exporter_info
+$ catmandu fix_info
+$ catmandu importer_info
+$ catmandu store_info
+$ catmandu help <command>
 ```
 
 ## CLI - convert()
@@ -151,6 +160,33 @@ $ cat ./shared/journals_mab2.dat | catmandu convert MAB2 to JSON
 $ catmandu convert MAB2 to JSON < ./shared/journals_mab2.dat
 
 $ catmandu convert MAB2 --type XML to JSON < ./shared/journals_mab2.xml
+```
+
+## CLI - convert()
+
+```json
+{
+   "_id" : "246797-5",
+   "record" : [
+      ...
+      [
+         "331",
+         " ",
+         "_",
+         "UNIX-Magazin"
+      ],
+      ...
+      [
+         "406",
+         "a",
+         "j",
+         "1988",
+         "k",
+         "1992"
+      ],
+      ...
+    ] 
+}
 ```
 
 ## CLI - convert()
@@ -231,6 +267,10 @@ options:
         -L --load_path
         -v --verbose
 ```
+
+## CLI - import()
+
+... by default all Importers expect UTF-8 encoded data
 
 ## CLI - import()
 
@@ -331,7 +371,7 @@ options:
 ```terminal
 $ catmandu delete MongoDB --database_name mab --bag mab
 
-$ catmandu delete Elasticsearch --index_name mab
+$ catmandu delete Elasticsearch --index_name mab --bag mab
 
 $ catmandu delete MongoDB --database_name marc --bag marc --query '{"dc.creator": "Wall, Larry."}'
 
@@ -360,9 +400,9 @@ options:
 ## CLI - move()
 
 ```terminal
-$ catmandu move MongoDB --database_name marc --bag marc to Elasticsearch --index_name moved --bag moved
+$ catmandu move MongoDB --database_name marc --bag marc to Elasticsearch --index_name moved
 
-$ catmandu move MongoDB --database_name marc --bag marc --query '{"dc.creator": "Wall, Larry."}' to Elasticsearch --index_name moved --bag moved
+$ catmandu move MongoDB --database_name marc --bag marc --query '{"dc.creator": "Wall, Larry."}' to Elasticsearch --index_name moved
 
 $ catmandu move Elasticsearch --index_name mab --bag mab --query '_id:"http://example.org/1142708-5"' to Elasticsearch --index_name selected --bag selected
 ```
@@ -396,13 +436,13 @@ catmandu data [-?hLqv] [long options...]
 ```terminal
 $ catmandu data --from-store MongoDB --from-database_name marc --from-bag marc --query '{"dc.creator": "Wall, Larry."}'
 
-$ catmandu data --from-store Elasticsearch --from-index_name marc --query "dc.creator:\"Wall, Larry.\""
+$ catmandu data --from-store Elasticsearch --from-index_name marc --query 'dc.creator:"Wall, Larry."'
 
-$ catmandu data --from-store Elasticsearch --from-index_name mab --from-bag mab --cql-query "publisher exact Heise"
+$ catmandu data --from-store Elasticsearch --from-index_name mab --from-bag mab --cql-query 'publisher exact Heise'
 
-$ catmandu data --from-store Elasticsearch --from-index_name mab --from-bag mab --cql-query "issued > 2009" --into-exporter YAML
+$ catmandu data --from-store Elasticsearch --from-index_name mab --from-bag mab --cql-query 'issued > 2009' --into-exporter YAML
 
-$ catmandu data --from-store Elasticsearch --from-index_name mab --from-bag mab --cql-query "issued > 2009" --into-exporter CSV --fix 'retain_field("_id")'
+$ catmandu data --from-store Elasticsearch --from-index_name mab --from-bag mab --cql-query 'issued > 2009' --into-exporter CSV --fix 'retain_field("_id")'
 ```
 
 ## CLI - APIs
@@ -410,15 +450,45 @@ $ catmandu data --from-store Elasticsearch --from-index_name mab --from-bag mab 
 ```terminal
 $ catmandu convert OAI --url http://pub.uni-bielefeld.de/oai to JSON
 
-$ catmandu convert SRU --base http://sru.gbv.de/gvk --recordSchema picaxml 
-    --parser picaxml --query "pica.iss=0939-4362" to JSON    
+$ catmandu convert SRU --base http://sru.gbv.de/gvk --recordSchema picaxml --parser picaxml --query "pica.iss=0939-4362" to JSON    
 
 $ catmandu convert getJSON --from http://example.org/alice.json to YAML
 
-$ catmandu convert getJSON --dry 1 --url http://{domain}/robots.txt 
-    < domains
+$ catmandu convert getJSON --dry 1 --url http://{domain}/robots.txt < domains
 ```
 
+## config
+
+```terminal
+$ cat catmandu.yml
+---
+store:
+  mdb:
+   package: MongoDB
+   options:
+    database_name: mydb
+  els:
+   package: Elasticsearch
+   options:
+    index_name: mydb
+
+$ catmandu import JSON to mdb < records.json
+$ catmandu import MARC to els < records.mrc
+$ catmandu export mdb to JSON
+$ catmandu export els to JSON
+```
+
+## Excercise 1
+
+* convert data
+* store data
+* query data
+* get data
+* edit config
+
+---
+
+class: middle
 ## Fix
 
 ... easy data manipulation by non programmers
@@ -465,7 +535,7 @@ remove_field('record');
 pica_map('001A0','date');
 pica_map('010@a','language');
 pica_map('009Qa','primaryTopicOf.$append');
-pica_map('027A[01]a','furtherTitle');
+pica_map('027A[01]a','varyingFormOfTitle');
 remove_field('record');
 ```
 
@@ -613,36 +683,33 @@ clone();
 cmd("java MyClass");
 ```
 
-## config
+## Fix - Binds
 
-```
-$ cat catmandu.yml
----
-store:
-  mdb:
-   package: MongoDB
-   options:
-    database_name: mydb
-  els:
-   package: Elasticsearch
-   options:
-    index_name: mydb
-  sol:
-   package: Solr
-   options:
-    url: http://localhost:8983/solr
+... provide processing hooks around Fix functions
 
-$ catmandu import JSON to mdb < records.json
-$ catmandu import MARC to els < records.mrc
-$ catmandu import YAML to sol < records.yaml
-$ catmandu export mdb to JSON
-$ catmandu export els to JSON
-$ catmandu export sol
+```terminal
+$ echo "{}" | catmandu convert --fix 'meow()'
+{ "meow": "Prrr" }
+$ echo "{}" | catmandu convert --fix 'do bark() meow() end'
+woof! woof!
+{ "meow": "Prrr" }
 ```
+
+## Excercise 2
+
+* import & fix data
+* export & fix data
+
+## RDF
+...
+
+## Excercise 3
+
+* export data to RDF
 
 ## Extensions
 
-```bash
+```terminal
 ├── Catmandu
 │   ├── Cmd
 │   │   └── foo.pm
@@ -730,17 +797,15 @@ sub command {
  
 1;
 ```
-
 ## Extensions
 
 ```terminal
 catmandu -I ./lib convert Hello < ./shared/names.csv 
-catmandu -I ./lib convert Hello --fix "hello_world()" 
-    < ./shared/names.csv
+catmandu -D -I ./lib convert Hello --fix "hello_world()" < ./shared/names.csv
 catmandu -I ./lib hello_world --greeting Moin
 ```
 
-# Links
+## Links
 
 http://librecat.org
 
@@ -750,4 +815,5 @@ http://metacpan.org/release/Catmandu
 
 http://github.com/LibreCat/Catmandu
 
-
+.center[![XKCD](./slides/img/xkcd_perl.png "xkcd.com/519/")]
+.center[<small>\[Comic by [Randall Munroe](http://xkcd.com/519/), [CC BY-NC 2.5](https://creativecommons.org/licenses/by-nc/2.5/)\]</small>]

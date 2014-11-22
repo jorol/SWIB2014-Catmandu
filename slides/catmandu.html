@@ -200,15 +200,9 @@ class: center middle
 class: middle
 ## Catmandu
 
-... provide the open source set of programming components to build up digital libraries and research services 
+... provides an open source set of programming components to build up digital libraries and research services 
 
-... import data from various sources
-
-... map the fields to a common data model
-
-... store/index data in databases or search engines
-
-... export data in various formats
+... supports "Extract, Transform, Load" (ETL) processes
 
 ---
 class: middle
@@ -281,20 +275,23 @@ Available commands:
            data: store, index, search, import, export or convert objects
          delete: delete objects from a store
          export: export objects from a store
-  exporter_info: list installed Catmandu exporters
-       fix_info: list installed Catmandu fixes
          import: import objects into a store
-  importer_info: list installed Catmandu importers
-    module_info: list installed perl modules in a given namespace
+           info: list installed Catmandu modules
            move: move objects to another store
            repl: interactive shell for Catmandu
-     store_info: list installed Catmandu stores
 ```
 
 ---
 
 class: middle
 ## CLI - info
+
+```terminal
+$ catmandu info
+$ catmandu help <command>
+```
+
+or
 
 ```terminal
 $ catmandu exporter_info
@@ -705,6 +702,40 @@ $ catmandu convert getJSON --dry 1 --url http://{domain}/robots.txt
 
 ---
 class: middle
+## config
+
+```terminal
+$ cat catmandu.yml
+---
+store:
+  mdb:
+   package: MongoDB
+   options:
+    database_name: mydb
+  els:
+   package: Elasticsearch
+   options:
+    index_name: mydb
+
+$ catmandu import JSON to mdb < records.json
+$ catmandu import MARC to els < records.mrc
+$ catmandu export mdb to JSON
+$ catmandu export els to JSON
+```
+
+---
+class: middle
+## Excercise 1
+
+* convert data
+* store data
+* query data
+* get data
+* edit config
+
+---
+
+class: middle
 ## Fix
 
 ... easy data manipulation by non programmers
@@ -945,32 +976,21 @@ woof! woof!
 
 ---
 class: middle
-## config
+## Excercise 2
 
-```terminal
-$ cat catmandu.yml
+* import & fix data
+* export & fix data
+
 ---
-store:
-  mdb:
-   package: MongoDB
-   options:
-    database_name: mydb
-  els:
-   package: Elasticsearch
-   options:
-    index_name: mydb
-  sol:
-   package: Solr
-   options:
-    url: http://localhost:8983/solr
+class: middle
+## RDF
+...
 
-$ catmandu import JSON to mdb < records.json
-$ catmandu import MARC to els < records.mrc
-$ catmandu import YAML to sol < records.yaml
-$ catmandu export mdb to JSON
-$ catmandu export els to JSON
-$ catmandu export sol
-```
+---
+class: middle
+## Excercise 3
+
+* export data to RDF
 
 ---
 class: middle
