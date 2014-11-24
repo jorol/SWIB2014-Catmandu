@@ -116,9 +116,6 @@ Available commands:
            repl: interactive shell for Catmandu
 ```
 
----
-
-class: middle
 ## CLI - info
 
 ```terminal
@@ -486,9 +483,6 @@ $ catmandu export els to JSON
 * get data
 * edit config
 
----
-
-class: middle
 ## Fix
 
 ... easy data manipulation by non programmers
