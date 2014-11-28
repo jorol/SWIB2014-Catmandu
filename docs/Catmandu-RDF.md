@@ -89,5 +89,11 @@ Another RDF encoding Form (aREF)\
 * abbreviate URIs with underscore 
   (`dc_title`, `foaf_Person`...)
 * aREF query language
+* `aref_query` fix:\
+  `aref_query(query:dct_title, field:title)`
 
+## Reading RDF data
+
+<https://github.com/LibreCat/Catmandu-RDF/wiki/Reading-RDF-Data>
+  
 
