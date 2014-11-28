@@ -16,8 +16,11 @@ Windows user only:
     - _minimal_ version <http://jorol.de/catmandu/catmandu_cli.ova>
     - _GUI_ version <http://jorol.de/catmandu/catmandu_gui.ova>
 * Import the virtual machine in VirtualBox (see <https://docs.oracle.com/cd/E26217_01/E26796/html/qs-import-vm.html>)
-* Start the virtual machine (and connect via ssh)
-
+* Start the virtual machine (and connect via ssh). 
+  If starting fails with error message "implementation of the USB 2.0 controller not found!",
+  disable USB support in VirtualBox setting of the imported virtual machine. Ignore the error 
+  message "the shared folder '/vagrant' could not be set up".
+  
 ### User
 
 * _minimal_ VM:
@@ -28,14 +31,14 @@ Windows user only:
 
 #### _minimal_ VM:
 
-The best way to login to a guest Linux VirtualBox VM is port forwarding. By default, you should have one interface already which is using NAT. Then go to the Network settings and click the Port Forwarding button. Add a new Rule:
+The best way to login to a guest Linux VirtualBox VM is port forwarding. By default, you should have one interface already which is using NAT. Then go to the Network settings of VM settings and click the Port Forwarding button. Add a new rule, unless ssh is already configured:
 
     host port: 3022
     guest port: 22
     name: ssh
     other fields left blank
 
-SSH from host to guest:
+SSH from host to guest with username and password "catmandu":
 
 ```terminal
     ssh -p 3022 catmandu@127.0.0.1
