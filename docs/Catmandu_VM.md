@@ -20,6 +20,7 @@ Windows user only:
   If starting fails with error message "implementation of the USB 2.0 controller not found!",
   disable USB support in VirtualBox setting of the imported virtual machine. Ignore the error 
   message "the shared folder '/vagrant' could not be set up".
+* Copy the workshop files into virtual machine
   
 ### User
 
@@ -54,6 +55,13 @@ Copy files from host to guest:
     scp -P 3022 -r ./SWIB2014-Catmandu catmandu@127.0.0.1:/home/catmandu
 ```
 
+Or get workshop files via network with git:
+
+```terminal
+git clone https://github.com/jorol/SWIB2014-Catmandu.git
+cd SWIB-2014-Catmandu
+```
+
 ### Set keyboard layout
 
 #### _minimal_ VM:
@@ -70,3 +78,5 @@ $ shutdown -r 0
 #### _GUI_ VM:
 
 Go to __'System -> Preferences -> Keyboard'__. Tab __'Layouts'__, __'Add...'__ your keyboard layout and mark it as __'Default'__.
+
+
