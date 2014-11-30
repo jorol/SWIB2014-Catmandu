@@ -433,8 +433,6 @@ $ catmandu convert MARC --fix ./shared/marc.fix to Template
 class: middle
 ## CLI - convert()
 
-see https://gbv.github.io/aREF/aREF.html and https://metacpan.org/pod/RDF::aREF
-
 ```cmd
 catmandu convert RDF --file ./shared/zdb_resources.rdf to YAML
 catmandu convert MAB2 --type RAW --fix ./shared/mab2rdf.fix to RDF 
@@ -442,6 +440,8 @@ catmandu convert MAB2 --type RAW --fix ./shared/mab2rdf.fix to RDF
 catmandu convert MAB2 --type RAW --fix ./shared/mab2rdf.fix to RDF 
     --type xml < ./shared/mab2.dat
 ```
+
+See https://gbv.github.io/aREF/ and https://metacpan.org/pod/RDF::aREF
 
 ---
 class: middle
@@ -985,21 +985,21 @@ class: middle
 class: middle
 ## Processing RDF with Catmandu
 
-To installl Catmandu RDF support on your own machine:
-
-```terminal
-$ cpanm --sudo install Catmandu::RDF
-```
-
 Unfortunately Catmandu-RDF at the virtual machine is broken. Fix with:
 
 ```terminal
 $ cpanm --sudo List::Util
 ```
 
+To installl Catmandu RDF support on your own machine:
+
+```terminal
+$ cpanm --sudo install Catmandu::RDF
+```
+
 ---
 class: middle
-## Convert RDF
+## Convert from RDF
 
 ```terminal
 $ catmandu convert RDF --file ./shared/zdb_resources.rdf to YAML
@@ -1011,25 +1011,25 @@ class: middle
 ## Introduction
 
 * RDF data is graphs
-* Catmandu items are records
+* Catmandu items are items (list-map-structures)
 
-*RDF graph <-> records/items* (noSPARQL)
+RDF graph `</>` item
 
 ---
 class: middle
 ## Introduction: expressing RDF data
 
-* Many serialization forms (RDF/XML, JSON-LD, Turtle...)
+* Multiple forms of serialization (RDF/XML, JSON-LD, Turtle...)
 * Multiple forms of URI abbreviation
 
 ---
 class: middle
 ## Another RDF encoding Form (aREF)
 
-http://gbv.github.io/aREF/
+see https://gbv.github.io/aREF/ and https://metacpan.org/pod/RDF::aREF
 
 ```yaml
-http://dx.doi.org/10.2474/trol.7.147:
+"http://dx.doi.org/10.2474/trol.7.147":
   dct_title:
   - Frictional Coefficient under Banana Skin@
   dct_date:
@@ -1037,6 +1037,49 @@ http://dx.doi.org/10.2474/trol.7.147:
   dct_isPartOf:
   - http://id.crossref.org/issn/1881-2198
 ```
+
+```terminal
+catmandu convert YAML to RDF < shared/aref.yml
+```
+
+---
+class: middle
+## Multiple forms of serialization
+
+```terminal
+catmandu convert YAML to RDF --type ntriples < shared/aref.yml
+catmandu convert YAML to RDF --type rdfjson < shared/aref.yml
+catmandu convert YAML to RDF --type rdfxml < shared/aref.yml
+```
+
+---
+class: middle
+## aREF in YAML/JSON/list-map-structures
+
+```yaml
+"http://dx.doi.org/10.2474/trol.7.147":
+  dct_title:
+  - Frictional Coefficient under Banana Skin@
+  dct_date:
+  - 2012^xs_gYear
+  dct_isPartOf:
+  - http://id.crossref.org/issn/1881-2198
+```
+
+```terminal
+catmandu convert YAML to JSON --pretty 1 < shared/aref.yml
+```
+
+---
+class: middle
+## Mapping between RDF graphs and aREF items
+
+* abbreviate URIs with underscore 
+  (`dc_title`, `foaf_Person`...)
+* append `^` and datatype for data literals
+* append `@lang` for language literals
+* optionally append `@` for literals
+* optionally put URI between `<` and `>`
 
 ---
 class: middle
@@ -1084,22 +1127,16 @@ importer:
 
 ---
 class: middle
-## Mapping RDF graphs to records
-
-Another RDF encoding Form (aREF)
-
-http://gbv.github.io/aREF/
-
-* abbreviate URIs with underscore 
-  (`dc_title`, `foaf_Person`...)
-* aREF query language
-* `aref_query` fix: `aref_query(query:dct_title, field:title)`
-
----
-class: middle
 ## Reading RDF data
 
 https://github.com/LibreCat/Catmandu-RDF/wiki/Reading-RDF-Data
+
+```terminal
+$ catmandu convert RDF --file ./shared/zdb_resources.rdf to YAML
+$ catmandu convert RDF --url http://d-nb.info/1001703464 to YAML
+```
+
+`aref_query` fix
 
 ---
 class: middle
